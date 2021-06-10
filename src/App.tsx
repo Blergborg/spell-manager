@@ -17,18 +17,13 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       flexGrow: 1,
     },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'center',
-      color: theme.palette.text.secondary,
-    },
     lists: {
       textAlign: 'center',
       maxHeight: 480,
       overflow: 'auto',
     },
     spellText: {
-      textAlign: 'inherit'
+      // textAlign: 'inherit'
     }
   }),
 );
@@ -169,14 +164,14 @@ const Spellbook = () => {
       <Container className={classes.root}>
       {/* Container represents a max width for our page and adds padding on the left an right */}
       {/* can set maxWidth attr in a material ui <Containter> tag */}
-        <Grid container spacing={2}>
+        <Grid container>
           <Grid item xs={12} sm={4}>
             <h3>Settings</h3>
             <List className={classes.lists}>
 
             <div className="level_manager">
               <h4>Level:</h4>
-              <Grid container direction='row' spacing={2} justify='center' alignItems='center'>
+              <Grid container direction='row' spacing={1} justify='center' alignItems='center'>
                 <Grid item xs={2}>
                   <IconButton size='small' onClick={levelDown}>
                     <Remove />
@@ -194,7 +189,7 @@ const Spellbook = () => {
             </div>
             <div className="spell_abl_manager">
               <h4>Spell Ability Mod:</h4>
-              <Grid container direction='row' spacing={2} justify='center' alignItems='center'>
+              <Grid container direction='row' spacing={1} justify='center' alignItems='center'>
                 <Grid item xs={2}>
                   <IconButton size='small' onClick={spellModDown}>
                     <Remove />
@@ -261,10 +256,11 @@ const Spellbook = () => {
 
           <Grid item xs={12} sm={4}>
             <h3>Details</h3>
+            <List className={classes.lists}>
             {
               (spellDetails)
               ? 
-                <div>
+                <div style={{padding: '10px'}}>
                   <h4>{spellDetails.name}</h4>
                   <p>Level: {spellDetails.level}</p>
                   <p>Casting Time: {spellDetails.casting_time}</p>
@@ -276,7 +272,7 @@ const Spellbook = () => {
               :
               <p>Details will show up here.</p>
             }
-
+            </List>
           </Grid>
         </Grid>
         
