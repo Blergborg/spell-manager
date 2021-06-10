@@ -1,7 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { HtmlHTMLAttributes, useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 
+import { Grid, IconButton, ListSubheader } from '@material-ui/core';
+import { Add, Remove } from '@material-ui/icons';
+import Container from '@material-ui/core/Container';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+    },
+    lists: {
+      textAlign: 'center',
+      maxHeight: 480,
+      overflow: 'auto',
+    },
+    spellText: {
+      textAlign: 'inherit'
+    }
+  }),
+);
 
 // need to add more interfaces, we're in typescript, use the types
 enum PlayerClass {
@@ -28,44 +58,73 @@ type spellCastingData = {
   "spell_slots_level_9": number;
 }
 
+type classSpell = {
+  "index": string;
+  "name": string;
+  "url": string;
+}
+
+type spell = {
+  "index": string;
+  "name": string;
+  "desc": string[];
+  "range": string;
+  "components": string[];
+  "ritual": boolean;
+  "duration": string;
+  "concentration": boolean;
+  "casting_time": string;
+  "level": number;
+}
+
 
 const App = () => {
   return (
     <div className="App">
-      <h1>Welcome to Spellbook</h1>
-      <h2>Let's look at some D&D 5e stuff</h2>
+      <header className="App-header">
+        <h1>Welcome to Spellbook</h1>
+        <h2>Let's look at some D&D 5e stuff</h2>
+      </header>
       <Spellbook/>
     </div>
   );
 }
 
 
-// Note make a spell type
-const getSpellName = (spell: any) => {
-  return `${spell.name}`;
-}
-
 const Spellbook = () => {
   const [dataJson, setDataJson] = useState('No Data Retrieved');
+  // TODO: Make spell type
   const [spells, setSpells] = useState<any>([]);
   const [playerClass, setPlayerClass] = useState('all');
   const [level, setLevel] = useState(1);
+  const [spellMod, setSpellMod] = useState(0);
   const [spellCast, setSpellCast] = useState<spellCastingData>();
+  const [selected, setSelected] = useState('');
+  const [spellDetails, setSpellDetails] = useState<spell>();
 
+  // Class and Spell-list data
   useEffect(() => {
     fetchSpells(playerClass).then((spellData) => {
       setDataJson(JSON.stringify(spellData) || '');
+      // setSpells(addSlotLvls(spellData.data.results));
       setSpells(spellData.data.results);
     });
     if (playerClass !== 'all') {
       fetchSpellCast(level, playerClass).then((castData) => {
         setDataJson(JSON.stringify(castData) || '');
         setSpellCast(castData.data.spellcasting);
-      });
+      })
     } else {
       setSpellCast(undefined);
     }
   }, [playerClass, level])
+
+  // Spell details data
+  useEffect(() => {
+    fetchDetails(selected).then((detailsData) => {
+      setSpellDetails(detailsData.data)
+    })
+  }, [selected, spellDetails])
 
   const levelUp = () => {
     if (level < 20) {
@@ -79,49 +138,150 @@ const Spellbook = () => {
     }
   };
 
+  const spellModUp = () => {
+    if (spellMod < 5) {
+      setSpellMod(spellMod + 1);
+    }
+  }
+
+  const spellModDown = () => {
+    if (spellMod > -5) {
+      setSpellMod(spellMod - 1);
+    }
+  }
+
   const onChangePlayerClass = (e: any) => {
     const newPC = e.target.value;
     setPlayerClass(newPC)
   }
+
+  const handleListItemClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    spellIndex: string
+  ) => {
+    setSelected(spellIndex);
+  }
   
 
+  const classes = useStyles();
+
   return (
-    <div>
-      <div className="level_manager">
-        <button onClick={levelUp}>+</button>
-        <p>Level: {level}</p>
-        <button onClick={levelDown}>-</button>
-      </div>
-      <div className='player_class_select'>
-        <select onChange={onChangePlayerClass}>
-          <option key="all" value="all">ALL</option>
-          {Object.values(PlayerClass).map(pc => {
-            return (
-              <option key={pc} value={pc}> {pc.toUpperCase()} </option>
-            )
-          })}
-        </select>
-      </div>
-      <div className="casting_data">
-        <p>cantrips: {spellCast?.cantrips_known}</p>
-        <p>spells known: {spellCast?.spells_known}</p>
-        <p>1st level: {spellCast?.spell_slots_level_1}</p>
-        <p>2nd level: {spellCast?.spell_slots_level_2}</p>
-        <p>3rd level: {spellCast?.spell_slots_level_3}</p>
-        <p>4th level: {spellCast?.spell_slots_level_4}</p>
-        <p>5th level: {spellCast?.spell_slots_level_5}</p>
-        <p>6th level: {spellCast?.spell_slots_level_6}</p>
-        <p>7th level: {spellCast?.spell_slots_level_7}</p>
-        <p>8th level: {spellCast?.spell_slots_level_8}</p>
-        <p>9th level: {spellCast?.spell_slots_level_9}</p>
-      </div>
-      {
-        spells.map((spell: any, index: number) => {
-          return <p key={index}>{getSpellName(spell)}</p>;
-        })
-      }
-      <pre style={{textAlign:"left"}}>{dataJson}</pre>
-    </div>
+      <Container className={classes.root}>
+      {/* Container represents a max width for our page and adds padding on the left an right */}
+      {/* can set maxWidth attr in a material ui <Containter> tag */}
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={4}>
+            <h3>Settings</h3>
+            <List className={classes.lists}>
+
+            <div className="level_manager">
+              <h4>Level:</h4>
+              <Grid container direction='row' spacing={2} justify='center' alignItems='center'>
+                <Grid item xs={2}>
+                  <IconButton size='small' onClick={levelDown}>
+                    <Remove />
+                  </IconButton>
+                </Grid>
+                <Grid item xs={2}>
+                  <p>{level}</p>
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton size='small' onClick={levelUp}>
+                    <Add />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </div>
+            <div className="spell_abl_manager">
+              <h4>Spell Ability Mod:</h4>
+              <Grid container direction='row' spacing={2} justify='center' alignItems='center'>
+                <Grid item xs={2}>
+                  <IconButton size='small' onClick={spellModDown}>
+                    <Remove />
+                  </IconButton>
+                </Grid>
+                <Grid item xs={2}>
+                  <p>{spellMod}</p>
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton size='small' onClick={spellModUp}>
+                    <Add />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </div>
+            <div className='player_class_select'>
+              <select onChange={onChangePlayerClass}>
+                <option key="all" value="all">ALL</option>
+                {Object.values(PlayerClass).map(pc => {
+                  return (
+                    <option key={pc} value={pc}> {pc.toUpperCase()} </option>
+                  )
+                })}
+              </select>
+            </div>
+            <div className="castingData">
+              <h3>Casting Information</h3>
+              <p>cantrips: {spellCast?.cantrips_known}</p>
+              <p>spells known: {spellCast?.spells_known}</p>
+              <h4>Spell Slots</h4>
+              <p>1st level: {spellCast?.spell_slots_level_1}</p>
+              <p>2nd level: {spellCast?.spell_slots_level_2}</p>
+              <p>3rd level: {spellCast?.spell_slots_level_3}</p>
+              <p>4th level: {spellCast?.spell_slots_level_4}</p>
+              <p>5th level: {spellCast?.spell_slots_level_5}</p>
+              <p>6th level: {spellCast?.spell_slots_level_6}</p>
+              <p>7th level: {spellCast?.spell_slots_level_7}</p>
+              <p>8th level: {spellCast?.spell_slots_level_8}</p>
+              <p>9th level: {spellCast?.spell_slots_level_9}</p>
+            </div>
+            </List>
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <h3>Spells</h3>
+            <List className={classes.lists}>
+            {
+              <ul>
+                {spells.map((spell: any,) => {
+                  return ( 
+                    <ListItem 
+                    button
+                    selected={selected === spell.index}
+                    onClick={(event) => handleListItemClick(event, spell.index)}>
+                      <ListItemText primary={`${spell.name}`}/>
+                    </ListItem>
+                  );
+                })}
+              </ul>
+            }
+            </List>
+            {/* <pre style={{textAlign:"left"}}>{dataJson}</pre> */}
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <h3>Details</h3>
+            {
+              (spellDetails)
+              ? 
+                <div>
+                  <h4>{spellDetails.name}</h4>
+                  <p>Level: {spellDetails.level}</p>
+                  <p>Casting Time: {spellDetails.casting_time}</p>
+                  <p>Range: {spellDetails.range}</p>
+                  <p>Components: {spellDetails.components}</p>
+                  <br/>
+                  <p>{spellDetails.desc}</p>
+                </div>
+              :
+              <p>Details will show up here.</p>
+            }
+
+          </Grid>
+        </Grid>
+        
+        
+      </Container>
   );
 }
 
@@ -146,6 +306,16 @@ const fetchSpells = (playerClass?:string):Promise<any> => {
     console.error(err);
   })
 }
+const fetchDetails = (selectedSpell?:string):Promise<any> => {
+  let detailsUrl = 'https://www.dnd5eapi.co/api/spells/acid-arrow'
+  if (selectedSpell !== '') { detailsUrl = `https://www.dnd5eapi.co/api/spells/${selectedSpell}`}
 
+  return axios.get(detailsUrl).then( res => {
+    console.log(res);
+    return res;
+  }).catch(err => {
+    console.error(err);
+  })
+}
 
 export default App;
