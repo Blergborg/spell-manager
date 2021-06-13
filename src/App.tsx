@@ -53,11 +53,11 @@ type spellCastingData = {
   "spell_slots_level_9": number;
 }
 
-type classSpell = {
-  "index": string;
-  "name": string;
-  "url": string;
-}
+// type classSpell = {
+//   "index": string;
+//   "name": string;
+//   "url": string;
+// }
 
 type spell = {
   "index": string;
@@ -81,6 +81,9 @@ const App = () => {
         <h2>Let's look at some D&D 5e stuff</h2>
       </header>
       <Spellbook/>
+      <footer className="App-footer">
+        <p>(Made using <a href="http://www.dnd5eapi.co/">D&D 5e API</a>)</p>
+      </footer>
     </div>
   );
 }
@@ -164,7 +167,7 @@ const Spellbook = () => {
       <Container className={classes.root}>
       {/* Container represents a max width for our page and adds padding on the left an right */}
       {/* can set maxWidth attr in a material ui <Containter> tag */}
-        <Grid container>
+        <Grid container direction='row'>
           <Grid item xs={12} sm={4}>
             <h3>Settings</h3>
             <List className={classes.lists}>
@@ -187,7 +190,7 @@ const Spellbook = () => {
                 </Grid>
               </Grid>
             </div>
-            <div className="spell_abl_manager">
+            {/* <div className="spell_abl_manager">
               <h4>Spell Ability Mod:</h4>
               <Grid container direction='row' spacing={1} justify='center' alignItems='center'>
                 <Grid item xs={2}>
@@ -204,8 +207,9 @@ const Spellbook = () => {
                   </IconButton>
                 </Grid>
               </Grid>
-            </div>
+            </div> */}
             <div className='player_class_select'>
+              <h4>Class:</h4>
               <select onChange={onChangePlayerClass}>
                 <option key="all" value="all">ALL</option>
                 {Object.values(PlayerClass).map(pc => {

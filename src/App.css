@@ -16,17 +16,22 @@
 .App-header {
   background-color: #282c34;
   /* min-height: 100vh; */
-  max-height: 160px;
+  max-height: 10rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  /* font-size: calc(10px + 2vmin); */
+  font-size: 1em;
   color: white;
 }
 
 .App-link {
   color: #61dafb;
+}
+
+.App-footer {
+  font-size: 0.8em;
 }
 
 @keyframes App-logo-spin {
