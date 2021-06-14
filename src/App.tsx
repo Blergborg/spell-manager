@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 
-import { Grid, IconButton, Button, ButtonGroup } from '@material-ui/core';
+import { Grid, IconButton, Button, ButtonGroup} from '@material-ui/core';
 import { Add, Remove } from '@material-ui/icons';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
+      marginBottom: '4em',
     },
     lists: {
       textAlign: 'center',
@@ -143,7 +144,7 @@ const Spellbook = () => {
   const classes = useStyles();
 
   return (
-      <Container className={classes.root}>
+      <Container className={classes.root} maxWidth='lg'>
       {/* Container represents a max width for our page and adds padding on the left an right */}
       {/* can set maxWidth attr in a material ui <Containter> tag */}
         <Grid container direction='row'>
