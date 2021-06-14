@@ -1,8 +1,8 @@
-import React, { HtmlHTMLAttributes, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 
-import { Grid, IconButton, ListSubheader } from '@material-ui/core';
+import { Grid, IconButton, Button, ButtonGroup } from '@material-ui/core';
 import { Add, Remove } from '@material-ui/icons';
 import Container from '@material-ui/core/Container';
 import List from '@material-ui/core/List';
@@ -19,12 +19,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     lists: {
       textAlign: 'center',
-      maxHeight: 480,
+      maxHeight: 600,
       overflow: 'auto',
     },
-    spellText: {
-      // textAlign: 'inherit'
-    }
   }),
 );
 
@@ -82,7 +79,7 @@ const App = () => {
       </header>
       <Spellbook/>
       <footer className="App-footer">
-        <p>(Made using <a href="http://www.dnd5eapi.co/">D&D 5e API</a>)</p>
+        <p>(Made using <a className='App-link' href="http://www.dnd5eapi.co/">D&D 5e API</a>)</p>
       </footer>
     </div>
   );
@@ -90,12 +87,9 @@ const App = () => {
 
 
 const Spellbook = () => {
-  const [dataJson, setDataJson] = useState('No Data Retrieved');
-  // TODO: Make spell type
   const [spells, setSpells] = useState<any>([]);
   const [playerClass, setPlayerClass] = useState('all');
   const [level, setLevel] = useState(1);
-  const [spellMod, setSpellMod] = useState(0);
   const [spellCast, setSpellCast] = useState<spellCastingData>();
   const [selected, setSelected] = useState('');
   const [spellDetails, setSpellDetails] = useState<spell>();
@@ -103,13 +97,10 @@ const Spellbook = () => {
   // Class and Spell-list data
   useEffect(() => {
     fetchSpells(playerClass).then((spellData) => {
-      setDataJson(JSON.stringify(spellData) || '');
-      // setSpells(addSlotLvls(spellData.data.results));
       setSpells(spellData.data.results);
     });
     if (playerClass !== 'all') {
       fetchSpellCast(level, playerClass).then((castData) => {
-        setDataJson(JSON.stringify(castData) || '');
         setSpellCast(castData.data.spellcasting);
       })
     } else {
@@ -136,18 +127,6 @@ const Spellbook = () => {
     }
   };
 
-  const spellModUp = () => {
-    if (spellMod < 5) {
-      setSpellMod(spellMod + 1);
-    }
-  }
-
-  const spellModDown = () => {
-    if (spellMod > -5) {
-      setSpellMod(spellMod - 1);
-    }
-  }
-
   const onChangePlayerClass = (e: any) => {
     const newPC = e.target.value;
     setPlayerClass(newPC)
@@ -172,42 +151,20 @@ const Spellbook = () => {
             <h3>Settings</h3>
             <List className={classes.lists}>
 
-            <div className="level_manager">
+           
+            <div className='level_manager'>
               <h4>Level:</h4>
-              <Grid container direction='row' spacing={1} justify='center' alignItems='center'>
-                <Grid item xs={2}>
-                  <IconButton size='small' onClick={levelDown}>
-                    <Remove />
-                  </IconButton>
-                </Grid>
-                <Grid item xs={2}>
-                  <p>{level}</p>
-                </Grid>
-                <Grid item xs={2}>
-                  <IconButton size='small' onClick={levelUp}>
-                    <Add />
-                  </IconButton>
-                </Grid>
-              </Grid>
+              <ButtonGroup size='small' variant='contained'>
+                <IconButton size='small' onClick={levelDown}>
+                  <Remove />
+                </IconButton>
+                <Button>{level}</Button>
+                <IconButton size='small' onClick={levelUp}>
+                  <Add />
+                </IconButton>
+              </ButtonGroup>
+
             </div>
-            {/* <div className="spell_abl_manager">
-              <h4>Spell Ability Mod:</h4>
-              <Grid container direction='row' spacing={1} justify='center' alignItems='center'>
-                <Grid item xs={2}>
-                  <IconButton size='small' onClick={spellModDown}>
-                    <Remove />
-                  </IconButton>
-                </Grid>
-                <Grid item xs={2}>
-                  <p>{spellMod}</p>
-                </Grid>
-                <Grid item xs={2}>
-                  <IconButton size='small' onClick={spellModUp}>
-                    <Add />
-                  </IconButton>
-                </Grid>
-              </Grid>
-            </div> */}
             <div className='player_class_select'>
               <h4>Class:</h4>
               <select onChange={onChangePlayerClass}>

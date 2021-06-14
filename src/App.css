@@ -31,7 +31,14 @@
 }
 
 .App-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: white;
+  text-align: center;
   font-size: 0.8em;
+  background-color: #282c34;
 }
 
 @keyframes App-logo-spin {
