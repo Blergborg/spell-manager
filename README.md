@@ -7,6 +7,8 @@ A React app written with TypeScript for quickly referenceing spell information a
 Set your class and level to see the available spells organized by spell-level and an estimate of your available resources.
 Setting class to "All" simply lists every spell in alphabetical order regardless of level.
 
+![](/media/Spellbook-5-screenshot.jpg)
+
 ### Visit
 https://spellbook-5.herokuapp.com/
 
