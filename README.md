@@ -2,7 +2,7 @@
 
 ## Description
 
-A React webapp written with TypeScript for quickly referenceing spell information and stats in 5th edition Dungeons & Dragons.
+A React app written with TypeScript for quickly referenceing spell information and stats in 5th edition Dungeons & Dragons.
 
 Set your class and level to see the available spells organized by spell-level and an estimate of your available resources.
 Setting class to "All" simply lists every spell in alphabetical order regardless of level.
