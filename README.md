@@ -1,4 +1,24 @@
-# Getting Started with Create React App
+# Spellbook-5e
+
+## Description
+
+A React app written with TypeScript for quickly referenceing spell information and stats in 5th edition Dungeons & Dragons.
+
+Set your class and level to see the available spells organized by spell-level and an estimate of your available resources.
+Setting class to "All" simply lists every spell in alphabetical order regardless of level.
+
+
+<img src="./media/Spellbook-5-screenshot.jpg" width=617 height=468>
+
+### Visit
+https://spellbook-5.herokuapp.com/
+
+## Acknowledgments
+
+Made possible by http://www.dnd5eapi.co/
+
+
+
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
