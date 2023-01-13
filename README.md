@@ -12,6 +12,7 @@ Setting class to "All" simply lists every spell in alphabetical order regardless
 
 ### Visit
 https://spellbook-5.herokuapp.com/
+No longer live as of 11/18/2022. (Heroku free-tier)
 
 ## Acknowledgments
 
