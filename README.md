@@ -11,9 +11,7 @@ Setting class to "All" simply lists every spell in alphabetical order regardless
 <img src="./media/Spellbook-5-screenshot.jpg" width=617 height=468>
 
 ### Visit
-~~https://spellbook-5.herokuapp.com/~~
-
-No longer live as of 11/18/2022. (Heroku free-tier)
+[Netlify Link](https://657b80f8d9c94e3595e996d1--dancing-souffle-38c0d2.netlify.app/)
 
 ## Acknowledgments
 
